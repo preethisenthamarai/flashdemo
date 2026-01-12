@@ -14,111 +14,105 @@ document.addEventListener('DOMContentLoaded', () => {
 		const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 		scene.add(light);
 		
-		const airplane = await loadGLTF("./airplane/scene.gltf");
-		airplane.scene.scale.set(0.5, 0.5, 0.5);
+		// Load and configure ape model
+		const ape = await loadGLTF("./ape/scene.gltf");
+		ape.scene.scale.set(0.3, 0.3, 0.3);
+		ape.scene.position.set(0, -0.2, 0);
 		
-		const airplaneMixer = new THREE.AnimationMixer(airplane.scene);
-		const airplaneAction = airplaneMixer.clipAction(airplane.animations[0]);
-		airplaneAction.play();
-		// calling airplaneClip and we are loading the audio from our hard disk
-		const airplaneAclip = await loadAudio("./sound/airplane.mp3");
-		// we instantiated the THREE listener component using airListener variable
-		const airListener = new THREE.AudioListener();
-		// instantiated a speaker positional audio as airplaneAudio
-		const airplaneAudio = new THREE.PositionalAudio(airListener);	
+		const apeMixer = new THREE.AnimationMixer(ape.scene);
+		const apeAction = apeMixer.clipAction(ape.animations[0]);
+		apeAction.play();
+		// Load and configure ape audio
+		const apeAclip = await loadAudio("./sound/ape.mp3");
+		const apeListener = new THREE.AudioListener();
+		const apeAudio = new THREE.PositionalAudio(apeListener);	
 		
 		
-		const ball = await loadGLTF("./ball/scene.gltf");
-		ball.scene.scale.set(0.2, 0.2, 0.2);
+		// Load and configure bug model
+		const bug = await loadGLTF("./bug/scene.gltf");
+		bug.scene.scale.set(0.4, 0.4, 0.4);
 		
-		const ballMixer = new THREE.AnimationMixer(ball.scene);
-		const ballAction = ballMixer.clipAction(ball.animations[0]);
-		ballAction.play();
+		const bugMixer = new THREE.AnimationMixer(bug.scene);
+		const bugAction = bugMixer.clipAction(bug.animations[0]);
+		bugAction.play();
 		
-		const ballAclip = await loadAudio("./sound/ball.mp3");
-		const ballListener = new THREE.AudioListener();
-		const ballAudio = new THREE.PositionalAudio(ballListener);	
+		// Load and configure bug audio
+		const bugAclip = await loadAudio("./sound/bug.mp3");
+		const bugListener = new THREE.AudioListener();
+		const bugAudio = new THREE.PositionalAudio(bugListener);	
 		
-		const car = await loadGLTF("./car/scene.gltf");
-		car.scene.scale.set(0.3, 0.3, 0.3);
-		car.scene.position.set(0, -0.1, 0);
+		// Load and configure cow model
+		const cow = await loadGLTF("./cow/scene.gltf");
+		cow.scene.scale.set(0.1, 0.1, 0.1);
+		cow.scene.position.set(0, -0.2, 0);
 		
-		const carMixer = new THREE.AnimationMixer(car.scene);
-		const carAction = carMixer.clipAction(car.animations[0]);
-		carAction.play();
+		const cowMixer = new THREE.AnimationMixer(cow.scene);
+		const cowAction = cowMixer.clipAction(cow.animations[0]);
+		cowAction.play();
 		
-		const carAclip = await loadAudio("./sound/car.mp3");
-		const carListener = new THREE.AudioListener();
-		const carAudio = new THREE.PositionalAudio(carListener);	
+		// Load and configure cow audio
+		const cowAclip = await loadAudio("./sound/cow.mp3");
+		const cowListener = new THREE.AudioListener();
+		const cowAudio = new THREE.PositionalAudio(cowListener);	
 		
-		const airplaneAnchor = mindarThree.addAnchor(0);
-		airplaneAnchor.group.add(airplane.scene);
-		// added listener to the camera
-		camera.add(airListener);
-		// we set the referal distance from which the audio should fade out
-		airplaneAudio.setRefDistance(100);
-		// set the buffer of audio to stream
-		airplaneAudio.setBuffer(airplaneAclip);
-		// we sset the audio to loop
-		airplaneAudio.setLoop(true);
-		// we added the audio to the anchor of airplane which will be activated on seeing  the airplane image
-		airplaneAnchor.group.add(airplaneAudio)
+		// Ape anchor
+		const apeAnchor = mindarThree.addAnchor(0);
+		apeAnchor.group.add(ape.scene);
+		camera.add(apeListener);
+		apeAudio.setRefDistance(100);
+		apeAudio.setBuffer(apeAclip);
+		apeAudio.setLoop(true);
+		apeAnchor.group.add(apeAudio);
 		
-		// make airplane audio play only when the target of airplane image is detected
-		airplaneAnchor.onTargetFound = () => {
-			airplaneAudio.play();
+		apeAnchor.onTargetFound = () => {
+			apeAudio.play();
 		}
-		// make airplane audio pause then the target image is lost in the camera
-		airplaneAnchor.onTargetLost = () => {
-			airplaneAudio.pause();
+		apeAnchor.onTargetLost = () => {
+			apeAudio.pause();
 		}
 		
-		
-		const ballAnchor = mindarThree.addAnchor(1);
-		ballAnchor.group.add(ball.scene);
-		
-		camera.add(ballListener);
-		ballAudio.setRefDistance(100);
-		ballAudio.setBuffer(ballAclip);
-		ballAudio.setLoop(true);
-		ballAnchor.group.add(ballAudio)
-		ballAnchor.onTargetFound = () => {
-			ballAudio.play();
+		// Bug anchor
+		const bugAnchor = mindarThree.addAnchor(1);
+		bugAnchor.group.add(bug.scene);
+		camera.add(bugListener);
+		bugAudio.setRefDistance(100);
+		bugAudio.setBuffer(bugAclip);
+		bugAudio.setLoop(true);
+		bugAnchor.group.add(bugAudio);
+		bugAnchor.onTargetFound = () => {
+			bugAudio.play();
 		}
-		ballAnchor.onTargetLost = () => {
-			ballAudio.pause();
+		bugAnchor.onTargetLost = () => {
+			bugAudio.pause();
 		}
 		
-		
-		const carAnchor = mindarThree.addAnchor(2);
-		carAnchor.group.add(car.scene);
-		
-		camera.add(carListener);
-		carAudio.setRefDistance(100);
-		carAudio.setBuffer(carAclip);
-		carAudio.setLoop(true);
-		carAnchor.group.add(carAudio)
-		carAnchor.onTargetFound = () => {
-			carAudio.play();
+		// Cow anchor
+		const cowAnchor = mindarThree.addAnchor(2);
+		cowAnchor.group.add(cow.scene);
+		camera.add(cowListener);
+		cowAudio.setRefDistance(100);
+		cowAudio.setBuffer(cowAclip);
+		cowAudio.setLoop(true);
+		cowAnchor.group.add(cowAudio);
+		cowAnchor.onTargetFound = () => {
+			cowAudio.play();
 		}
-		carAnchor.onTargetLost = () => {
-			carAudio.pause();
+		cowAnchor.onTargetLost = () => {
+			cowAudio.pause();
 		}
 		
 		const clock = new THREE.Clock();
-		
 		
 		await mindarThree.start();		
 		
 		renderer.setAnimationLoop(() => {
 			const delta = clock.getDelta();
-			airplaneMixer.update(delta);
-			ballMixer.update(delta);
-			carMixer.update(delta);
-			car.scene.rotation.set(0, car.scene.rotation.y + delta, 0);
+			apeMixer.update(delta);
+			bugMixer.update(delta);
+			cowMixer.update(delta);
+			cow.scene.rotation.set(0, cow.scene.rotation.y + delta, 0);
 			renderer.render(scene, camera);
 		});
 	}
 	start();
-	
 });

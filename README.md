@@ -1,2 +1,2 @@
-# AR FLASHCARDS
-flashcards made through AR
+# AR_Flashcard
+Augmented reality Flashcards
